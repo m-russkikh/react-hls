@@ -6,6 +6,8 @@ import classnames from 'classnames';
 
 import 'rc-slider/assets/index.css';
 
+const DISABLE_CONTROLS_TIMEOUT_MSEC = 5000;
+
 class HLSPlayer extends Component {
 
 	static defaultProps = {
@@ -25,18 +27,22 @@ class HLSPlayer extends Component {
 		isMuted: false,
 		isFullscreen: false,
 		currentTime: '00:00',
-		volume: 70
+		volume: 70,
+		disableControls: true,
+		startBuffering: false
 	};
 
 	constructor(props, context) {
 		super(props, context);
 
 		this.player = null;
+		this.timeoutId = null;
 
 		this.handlePlayBtn = this.handlePlayBtn.bind(this);
 		this.handleFullScreenBtn = this.handleFullScreenBtn.bind(this);
 		this.handleVolumeBtn = this.handleVolumeBtn.bind(this);
 		this.handleVolumeChange = this.handleVolumeChange.bind(this);
+		this.handlePlayerMouseMove = this.handlePlayerMouseMove.bind(this);
 		this.handleVideoListeners = this.handleVideoListeners.bind(this);
 	}
 
@@ -64,22 +70,16 @@ class HLSPlayer extends Component {
 	}
 
 	handleVideoListeners() {
-		const { disableControls } = this.props;
-
-		this.videoElement.addEventListener('timeupdate', () => {
-			if (!disableControls) {
-				this.setState({
-					currentTime: formatTime(this.videoElement.currentTime)
-				});
-			}
+		this.videoElement.addEventListener('loadeddata', () => {
+			this.setState({
+				startBuffering: true
+			});
 		});
 
-		this.videoElement.addEventListener('canplay', () => {
-			if (!disableControls) {
-				this.setState({
-					currentTime: formatTime(0)
-				});
-			}
+		this.videoElement.addEventListener('timeupdate', () => {
+			this.setState({
+				currentTime: formatTime(this.videoElement.currentTime)
+			});
 		});
 
 		this.videoElement.addEventListener('ended', () => {
@@ -109,8 +109,6 @@ class HLSPlayer extends Component {
 	handlePlayBtn(e) {
 		e.stopPropagation();
 
-		if (this.props.disableControls)
-			return;
 		if (e.target.classList.contains('rc-slider-step'))
 			return;
 
@@ -151,7 +149,6 @@ class HLSPlayer extends Component {
 	}
 
 	handleVolumeChange() {
-
 		const volume = this.volumeBar.state.value;
 		const isMuted = parseFloat(volume) <= 0;
 
@@ -163,9 +160,24 @@ class HLSPlayer extends Component {
 		});
 	}
 
+	handlePlayerMouseMove() {
+		const { disableControls, startBuffering } = this.state;
+
+		if (!disableControls || !startBuffering) return;
+		this.setState({
+			disableControls: false
+		});
+
+		clearTimeout(this.timeoutId);
+		this.timeoutId = setTimeout(() => {
+			this.setState({
+				disableControls: true
+			});
+		}, DISABLE_CONTROLS_TIMEOUT_MSEC);
+	}
+
 	render() {
-		const { isPlaying, isMuted, currentTime, duration, isFullscreen } = this.state;
-		const { disableControls } = this.props;
+		const { isPlaying, isMuted, currentTime, duration, isFullscreen, disableControls } = this.state;
 
 		let btnPlayClass = classnames('hlsPlayer-controls__btn', 'hlsPlayer-controls__btn-play',
 			isPlaying && 'hlsPlayer-controls__btn-play_pause');
@@ -175,7 +187,7 @@ class HLSPlayer extends Component {
 			isFullscreen && 'hlsPlayer-controls__btn-fullscreen_off');
 
 		return (
-			<div className="hlsPlayer" onClick={this.handlePlayBtn}
+			<div className="hlsPlayer" onClick={this.handlePlayBtn} onMouseMove={this.handlePlayerMouseMove}
 				 ref={ (container) => { this.videoContainer = container; } }
 			>
 				<video className='hlsPlayer-video'
