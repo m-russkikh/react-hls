@@ -1,5 +1,6 @@
 import '!script-loader!hls.js';
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import Slider from 'rc-slider';
 import screenfull from 'screenfull';
@@ -29,14 +30,14 @@ function formatTime(time) {
 class HLSPlayer extends Component {
 
 	static defaultProps = {
-		disableControls: false,
 		source: '',
+		title: '',
 		hlsParams: {}
 	};
 
 	static propTypes = {
-		disableControls: PropTypes.bool,
 		source: PropTypes.string.isRequired,
+		title: PropTypes.string,
 		hlsParams: PropTypes.object
 	};
 

@@ -12,6 +12,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _reactRedux = require('react-redux');
 
 var _rcSlider = require('rc-slider');
@@ -296,14 +300,14 @@ var HLSPlayer = function (_Component) {
 }(_react.Component);
 
 HLSPlayer.defaultProps = {
-	disableControls: false,
 	source: '',
+	title: '',
 	hlsParams: {}
 };
 HLSPlayer.propTypes = {
-	disableControls: _react.PropTypes.bool,
-	source: _react.PropTypes.string.isRequired,
-	hlsParams: _react.PropTypes.object
+	source: _propTypes2.default.string.isRequired,
+	title: _propTypes2.default.string,
+	hlsParams: _propTypes2.default.object
 };
 
 
