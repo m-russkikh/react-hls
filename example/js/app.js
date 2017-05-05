@@ -1,14 +1,25 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import axios from 'axios';
 import store from './store';
 import HLSPlayer from '../../dist/components/react-hls-player';
 
-const source = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8';
-
-ReactDOM.render(
-	<Provider store={store}>
-		<HLSPlayer source={source}/>
-	</Provider>,
-	document.getElementById('app')
-);
+axios.get('../webcast.json').then(response => {
+		return response.data;
+	})
+	.catch(error => {
+		console.warn('Error when load webcast.json', error);
+		return {
+			url: '',
+			title: 'Ошибка при загрузке плейлиста'
+		};
+	})
+	.then(data => {
+		ReactDOM.render(
+			<Provider store={store}>
+				<HLSPlayer source={data.url} title={data.title}/>
+			</Provider>,
+			document.getElementById('app')
+		);
+	});

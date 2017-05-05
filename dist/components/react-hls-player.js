@@ -242,6 +242,11 @@ var HLSPlayer = function (_Component) {
 						_this4.videoElement = video;
 					}
 				}),
+				(!disableControls || !this.props.source) && _react2.default.createElement(
+					'div',
+					{ className: 'hlsPlayer-title' },
+					this.props.title
+				),
 				!disableControls && _react2.default.createElement(
 					'div',
 					{ className: 'hlsPlayer-controls' },

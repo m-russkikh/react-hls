@@ -30,6 +30,7 @@
     "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
+    "axios": "^0.16.1",
     "classnames": "^2.2.5",
     "hls.js": "^0.7.6",
     "rc-slider": "^7.0.2",

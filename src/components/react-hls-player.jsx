@@ -187,6 +187,10 @@ class HLSPlayer extends Component {
 					   ref={ (video) => { this.videoElement = video; } }
 				/>
 				{
+					(!disableControls || !this.props.source) &&
+					<div className='hlsPlayer-title'>{this.props.title}</div>
+				}
+				{
 					!disableControls &&
 					<div className='hlsPlayer-controls'>
 						<div className={btnPlayClass}></div>
@@ -218,17 +222,17 @@ const mapStateToProps = function(state) {
 };
 
 function mapDispatchToProps(dispatch) {
-  return {
-  	actions: {
-  		playbackStatusChanged: (isPlaying) => dispatch(actions.playbackStatusChanged(isPlaying)),
-		muteStatusChanged: (isMuted) => dispatch(actions.muteStatusChanged(isMuted)),
-  		fullscreenChanged: (isFullscreen) => dispatch(actions.fullscreenChanged(isFullscreen)),
-		currentTimeChanged: (currentTime) => dispatch(actions.currentTimeChanged(currentTime)),
-		volumeChanged: (volume, isMuted) => dispatch(actions.volumeChanged(volume, isMuted)),
-		disableControlsChanged: (disableControls) => dispatch(actions.disableControlsChanged(disableControls)),
-		startBufferingChanged: (startBuffering) => dispatch(actions.startBufferingChanged(startBuffering))
-	}
-  };
+	return {
+		actions: {
+			playbackStatusChanged: (isPlaying) => dispatch(actions.playbackStatusChanged(isPlaying)),
+			muteStatusChanged: (isMuted) => dispatch(actions.muteStatusChanged(isMuted)),
+			fullscreenChanged: (isFullscreen) => dispatch(actions.fullscreenChanged(isFullscreen)),
+			currentTimeChanged: (currentTime) => dispatch(actions.currentTimeChanged(currentTime)),
+			volumeChanged: (volume, isMuted) => dispatch(actions.volumeChanged(volume, isMuted)),
+			disableControlsChanged: (disableControls) => dispatch(actions.disableControlsChanged(disableControls)),
+			startBufferingChanged: (startBuffering) => dispatch(actions.startBufferingChanged(startBuffering))
+		}
+	};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HLSPlayer);

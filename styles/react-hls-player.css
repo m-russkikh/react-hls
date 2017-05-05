@@ -22,6 +22,19 @@
 	padding: 0 40px;
 }
 
+.hlsPlayer-title {
+	position: absolute;
+	left: 0;
+	top: 30px;
+	color: white;
+	font-size: 22px;
+	padding: 0 40px;
+	width: 50%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 .hlsPlayer-controls__block {
 	display: inline-flex;
 	height: 100%;

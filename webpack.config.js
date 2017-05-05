@@ -7,7 +7,8 @@ module.exports = {
 	devServer: {
 		historyApiFallback: {
 			index: 'example/index.html'
-		}
+		},
+		contentBase: path.join(__dirname, "example")
 	},
 	entry: [
 		'./example/js/app.js'
