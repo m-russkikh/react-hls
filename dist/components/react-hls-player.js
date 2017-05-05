@@ -232,6 +232,7 @@ var HLSPlayer = function (_Component) {
 			var _props$state4 = this.props.state,
 			    isPlaying = _props$state4.isPlaying,
 			    isMuted = _props$state4.isMuted,
+			    volume = _props$state4.volume,
 			    currentTime = _props$state4.currentTime,
 			    isFullscreen = _props$state4.isFullscreen,
 			    disableControls = _props$state4.disableControls;
@@ -265,7 +266,7 @@ var HLSPlayer = function (_Component) {
 					_react2.default.createElement('div', { className: btnVolumeClass, onClick: this.handleVolumeBtn }),
 					_react2.default.createElement(_rcSlider2.default, {
 						className: 'hlsPlayer-controls__slider-volume',
-						defaultValue: 70,
+						defaultValue: volume,
 						maximumTrackStyle: { opacity: 0.4 },
 						minimumTrackStyle: { backgroundColor: 'white' },
 						handleStyle: {

@@ -178,7 +178,7 @@ class HLSPlayer extends Component {
 	}
 
 	render() {
-		const { isPlaying, isMuted, currentTime, isFullscreen, disableControls } = this.props.state;
+		const { isPlaying, isMuted, volume, currentTime, isFullscreen, disableControls } = this.props.state;
 
 		let btnPlayClass = classnames('hlsPlayer-controls__btn', 'hlsPlayer-controls__btn-play',
 			isPlaying && 'hlsPlayer-controls__btn-play_pause');
@@ -205,7 +205,7 @@ class HLSPlayer extends Component {
 						<div className={btnVolumeClass} onClick={this.handleVolumeBtn}></div>
 						<Slider
 							className="hlsPlayer-controls__slider-volume"
-							defaultValue={70}
+							defaultValue={volume}
 							maximumTrackStyle={{ opacity: 0.4 }}
 							minimumTrackStyle={{ backgroundColor: 'white'}}
 							handleStyle={{
