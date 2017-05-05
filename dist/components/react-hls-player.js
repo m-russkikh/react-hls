@@ -12,6 +12,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = require('react-redux');
+
 var _rcSlider = require('rc-slider');
 
 var _rcSlider2 = _interopRequireDefault(_rcSlider);
@@ -24,7 +26,15 @@ var _classnames = require('classnames');
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
+var _player = require('../actions/player');
+
+var actions = _interopRequireWildcard(_player);
+
 require('rc-slider/assets/index.css');
+
+require('../../styles/react-hls-player.css');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34,6 +44,22 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var DISABLE_CONTROLS_TIMEOUT_MSEC = 5000;
+
+function formatTime(time) {
+	time = parseInt(time);
+
+	var hours = Math.floor(time / 3600);
+	var minutes = Math.floor((time - hours * 3600) / 60);
+	var seconds = time - hours * 3600 - minutes * 60;
+
+	if (hours < 10) hours = '0' + hours;
+	if (minutes < 10) minutes = '0' + minutes;
+	if (seconds < 10) seconds = '0' + seconds;
+
+	return (hours !== '00' ? hours + ':' : '') + minutes + ':' + seconds;
+}
+
 var HLSPlayer = function (_Component) {
 	_inherits(HLSPlayer, _Component);
 
@@ -42,21 +68,14 @@ var HLSPlayer = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, (HLSPlayer.__proto__ || Object.getPrototypeOf(HLSPlayer)).call(this, props, context));
 
-		_this.state = {
-			isPlaying: false,
-			isMuted: false,
-			isFullscreen: false,
-			currentTime: '00:00',
-			volume: 70
-		};
-
-
 		_this.player = null;
+		_this.timeoutId = null;
 
 		_this.handlePlayBtn = _this.handlePlayBtn.bind(_this);
 		_this.handleFullScreenBtn = _this.handleFullScreenBtn.bind(_this);
 		_this.handleVolumeBtn = _this.handleVolumeBtn.bind(_this);
 		_this.handleVolumeChange = _this.handleVolumeChange.bind(_this);
+		_this.handlePlayerMouseMove = _this.handlePlayerMouseMove.bind(_this);
 		_this.handleVideoListeners = _this.handleVideoListeners.bind(_this);
 		return _this;
 	}
@@ -80,38 +99,32 @@ var HLSPlayer = function (_Component) {
 			document.addEventListener(_screenfull2.default.raw.fullscreenchange, this.handleScreenfullChange.bind(this));
 		}
 	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			clearTimeout(this.timeoutId);
+		}
+	}, {
 		key: 'handleScreenfullChange',
 		value: function handleScreenfullChange() {
-			this.setState({
-				isFullscreen: _screenfull2.default.isFullscreen
-			});
+			this.props.actions.fullscreenChanged(_screenfull2.default.isFullscreen);
 		}
 	}, {
 		key: 'handleVideoListeners',
 		value: function handleVideoListeners() {
 			var _this2 = this;
 
-			var disableControls = this.props.disableControls;
-
-
-			this.videoElement.addEventListener('timeupdate', function () {
-				if (!disableControls) {
-					_this2.setState({
-						currentTime: formatTime(_this2.videoElement.currentTime)
-					});
-				}
+			this.videoElement.addEventListener('loadeddata', function () {
+				_this2.props.actions.startBufferingChanged(true);
 			});
 
-			this.videoElement.addEventListener('canplay', function () {
-				if (!disableControls) {
-					_this2.setState({
-						currentTime: formatTime(0)
-					});
-				}
+			this.videoElement.addEventListener('timeupdate', function () {
+				var currentTime = formatTime(_this2.videoElement.currentTime);
+				_this2.props.actions.currentTimeChanged(currentTime);
 			});
 
 			this.videoElement.addEventListener('ended', function () {
 				_this2.videoElement.pause();
+				_this2.props.actions.playbackStatusChanged(false);
 			});
 		}
 	}, {
@@ -122,13 +135,7 @@ var HLSPlayer = function (_Component) {
 	}, {
 		key: 'onManifestParsed',
 		value: function onManifestParsed() {
-			var isPlaying = this.state.isPlaying;
-
-
 			this.player.startLoad();
-
-			if (isPlaying) this.videoElement.play();
-
 			this.handleVideoListeners();
 		}
 	}, {
@@ -141,17 +148,14 @@ var HLSPlayer = function (_Component) {
 		value: function handlePlayBtn(e) {
 			e.stopPropagation();
 
-			if (this.props.disableControls) return;
 			if (e.target.classList.contains('rc-slider-step')) return;
 
-			var isPlaying = this.state.isPlaying;
+			var isPlaying = this.props.state.isPlaying;
 
 
 			if (isPlaying) this.videoElement.pause();else this.videoElement.play();
 
-			this.setState({
-				isPlaying: !isPlaying
-			});
+			this.props.actions.playbackStatusChanged(!isPlaying);
 		}
 	}, {
 		key: 'handleFullScreenBtn',
@@ -165,9 +169,9 @@ var HLSPlayer = function (_Component) {
 		value: function handleVolumeBtn(e) {
 			e.stopPropagation();
 
-			var _state = this.state,
-			    isMuted = _state.isMuted,
-			    volume = _state.volume;
+			var _props$state = this.props.state,
+			    isMuted = _props$state.isMuted,
+			    volume = _props$state.volume;
 
 
 			if (volume === 0 && isMuted) return;
@@ -177,36 +181,49 @@ var HLSPlayer = function (_Component) {
 				value: isMuted ? volume : 0
 			});
 
-			this.setState({
-				isMuted: !isMuted
-			});
+			this.props.actions.muteStatusChanged(!isMuted);
 		}
 	}, {
 		key: 'handleVolumeChange',
 		value: function handleVolumeChange() {
-
 			var volume = this.volumeBar.state.value;
 			var isMuted = parseFloat(volume) <= 0;
 
 			this.videoElement.volume = volume / 100;
 			this.videoElement.muted = isMuted;
-			this.setState({
-				isMuted: isMuted,
-				volume: volume
-			});
+
+			this.props.actions.volumeChanged(volume, isMuted);
+		}
+	}, {
+		key: 'handlePlayerMouseMove',
+		value: function handlePlayerMouseMove() {
+			var _this3 = this;
+
+			var _props$state2 = this.props.state,
+			    disableControls = _props$state2.disableControls,
+			    startBuffering = _props$state2.startBuffering;
+
+
+			if (!disableControls || !startBuffering) return;
+
+			this.props.actions.disableControlsChanged(false);
+
+			clearTimeout(this.timeoutId);
+			this.timeoutId = setTimeout(function () {
+				_this3.props.actions.disableControlsChanged(true);
+			}, DISABLE_CONTROLS_TIMEOUT_MSEC);
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this3 = this;
+			var _this4 = this;
 
-			var _state2 = this.state,
-			    isPlaying = _state2.isPlaying,
-			    isMuted = _state2.isMuted,
-			    currentTime = _state2.currentTime,
-			    duration = _state2.duration,
-			    isFullscreen = _state2.isFullscreen;
-			var disableControls = this.props.disableControls;
+			var _props$state3 = this.props.state,
+			    isPlaying = _props$state3.isPlaying,
+			    isMuted = _props$state3.isMuted,
+			    currentTime = _props$state3.currentTime,
+			    isFullscreen = _props$state3.isFullscreen,
+			    disableControls = _props$state3.disableControls;
 
 
 			var btnPlayClass = (0, _classnames2.default)('hlsPlayer-controls__btn', 'hlsPlayer-controls__btn-play', isPlaying && 'hlsPlayer-controls__btn-play_pause');
@@ -215,14 +232,14 @@ var HLSPlayer = function (_Component) {
 
 			return _react2.default.createElement(
 				'div',
-				{ className: 'hlsPlayer', onClick: this.handlePlayBtn,
+				{ className: 'hlsPlayer', onClick: this.handlePlayBtn, onMouseMove: this.handlePlayerMouseMove,
 					ref: function ref(container) {
-						_this3.videoContainer = container;
+						_this4.videoContainer = container;
 					}
 				},
 				_react2.default.createElement('video', { className: 'hlsPlayer-video',
 					ref: function ref(video) {
-						_this3.videoElement = video;
+						_this4.videoElement = video;
 					}
 				}),
 				!disableControls && _react2.default.createElement(
@@ -239,7 +256,7 @@ var HLSPlayer = function (_Component) {
 							display: 'none'
 						},
 						ref: function ref(bar) {
-							_this3.volumeBar = bar;
+							_this4.volumeBar = bar;
 						},
 						onAfterChange: this.handleVolumeChange
 					}),
@@ -271,21 +288,38 @@ HLSPlayer.propTypes = {
 	source: _react.PropTypes.string.isRequired,
 	hlsParams: _react.PropTypes.object
 };
-exports.default = HLSPlayer;
 
 
-module.exports = HLSPlayer;
+var mapStateToProps = function mapStateToProps(state) {
+	return { state: state.player };
+};
 
-function formatTime(time) {
-	time = parseInt(time);
-
-	var hours = Math.floor(time / 3600);
-	var minutes = Math.floor((time - hours * 3600) / 60);
-	var seconds = time - hours * 3600 - minutes * 60;
-
-	if (hours < 10) hours = '0' + hours;
-	if (minutes < 10) minutes = '0' + minutes;
-	if (seconds < 10) seconds = '0' + seconds;
-
-	return (hours !== '00' ? hours + ':' : '') + minutes + ':' + seconds;
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: {
+			playbackStatusChanged: function playbackStatusChanged(isPlaying) {
+				return dispatch(actions.playbackStatusChanged(isPlaying));
+			},
+			muteStatusChanged: function muteStatusChanged(isMuted) {
+				return dispatch(actions.muteStatusChanged(isMuted));
+			},
+			fullscreenChanged: function fullscreenChanged(isFullscreen) {
+				return dispatch(actions.fullscreenChanged(isFullscreen));
+			},
+			currentTimeChanged: function currentTimeChanged(currentTime) {
+				return dispatch(actions.currentTimeChanged(currentTime));
+			},
+			volumeChanged: function volumeChanged(volume, isMuted) {
+				return dispatch(actions.volumeChanged(volume, isMuted));
+			},
+			disableControlsChanged: function disableControlsChanged(disableControls) {
+				return dispatch(actions.disableControlsChanged(disableControls));
+			},
+			startBufferingChanged: function startBufferingChanged(startBuffering) {
+				return dispatch(actions.startBufferingChanged(startBuffering));
+			}
+		}
+	};
 }
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(HLSPlayer);

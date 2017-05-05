@@ -10,7 +10,7 @@ module.exports = {
 		}
 	},
 	entry: [
-		'./example/index.js'
+		'./example/js/app.js'
 	],
 	output: {
 		path: path.join(__dirname, 'example/build'),

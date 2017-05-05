@@ -2,7 +2,7 @@
   "name": "react-hls",
   "version": "0.1.0",
   "description": "React component for HLS player",
-  "main": "dist/HLSPlayer.js",
+  "main": "dist/components/react-hls-player.js",
   "scripts": {
     "start": "webpack-dev-server --inline --host 0.0.0.0",
     "build": "webpack -p",
@@ -34,6 +34,8 @@
     "hls.js": "^0.7.6",
     "rc-slider": "^7.0.2",
     "react": "^15.5.4",
+    "react-redux": "^5.0.4",
+    "redux": "^3.6.0",
     "screenfull": "^3.2.0",
     "script-loader": "^0.7.0"
   }
