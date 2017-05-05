@@ -75,6 +75,13 @@ class HLSPlayer extends Component {
 		clearTimeout(this.timeoutId);
 	}
 
+	disableControlsOnTimeout() {
+		clearTimeout(this.timeoutId);
+		this.timeoutId = setTimeout(() => {
+			this.props.actions.disableControlsChanged(true);
+		}, DISABLE_CONTROLS_TIMEOUT_MSEC);
+	}
+
 	handleScreenfullChange() {
 		this.props.actions.fullscreenChanged(screenfull.isFullscreen);
 	}
@@ -82,6 +89,7 @@ class HLSPlayer extends Component {
 	handleVideoListeners() {
 		this.videoElement.addEventListener('loadeddata', () => {
 			this.props.actions.startBufferingChanged(true);
+			this.disableControlsOnTimeout();
 		});
 
 		this.videoElement.addEventListener('timeupdate', () => {
@@ -113,6 +121,8 @@ class HLSPlayer extends Component {
 
 		const { isPlaying, startBuffering } = this.props.state;
 		let classList = e.target.classList;
+
+		this.disableControlsOnTimeout();
 
 		if (!startBuffering) return;
 		if (!classList.contains('hlsPlayer-controls__btn-play') && !classList.contains('hlsPlayer-video'))
@@ -164,11 +174,7 @@ class HLSPlayer extends Component {
 		if (!disableControls || !startBuffering) return;
 
 		this.props.actions.disableControlsChanged(false);
-
-		clearTimeout(this.timeoutId);
-		this.timeoutId = setTimeout(() => {
-			this.props.actions.disableControlsChanged(true);
-		}, DISABLE_CONTROLS_TIMEOUT_MSEC);
+		this.disableControlsOnTimeout();
 	}
 
 	render() {

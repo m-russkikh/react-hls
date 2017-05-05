@@ -20,7 +20,7 @@ var initialState = {
 	isFullscreen: false,
 	currentTime: '00:00',
 	volume: 70,
-	disableControls: true,
+	disableControls: false,
 	startBuffering: false
 };
 
@@ -30,7 +30,7 @@ function playerReducer() {
 
 	switch (action.type) {
 		case types.PLAYBACK_STATUS_CHANGED:
-			return _extends({}, state, { isPlaying: action.isPlaying });
+			return _extends({}, state, { isPlaying: action.isPlaying, disableControls: false });
 		case types.MUTE_STATUS_CHANGED:
 			return _extends({}, state, { isMuted: action.isMuted });
 		case types.FULLSCREEN_CHANGED:

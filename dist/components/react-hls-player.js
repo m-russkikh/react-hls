@@ -104,6 +104,16 @@ var HLSPlayer = function (_Component) {
 			clearTimeout(this.timeoutId);
 		}
 	}, {
+		key: 'disableControlsOnTimeout',
+		value: function disableControlsOnTimeout() {
+			var _this2 = this;
+
+			clearTimeout(this.timeoutId);
+			this.timeoutId = setTimeout(function () {
+				_this2.props.actions.disableControlsChanged(true);
+			}, DISABLE_CONTROLS_TIMEOUT_MSEC);
+		}
+	}, {
 		key: 'handleScreenfullChange',
 		value: function handleScreenfullChange() {
 			this.props.actions.fullscreenChanged(_screenfull2.default.isFullscreen);
@@ -111,20 +121,21 @@ var HLSPlayer = function (_Component) {
 	}, {
 		key: 'handleVideoListeners',
 		value: function handleVideoListeners() {
-			var _this2 = this;
+			var _this3 = this;
 
 			this.videoElement.addEventListener('loadeddata', function () {
-				_this2.props.actions.startBufferingChanged(true);
+				_this3.props.actions.startBufferingChanged(true);
+				_this3.disableControlsOnTimeout();
 			});
 
 			this.videoElement.addEventListener('timeupdate', function () {
-				var currentTime = formatTime(_this2.videoElement.currentTime);
-				_this2.props.actions.currentTimeChanged(currentTime);
+				var currentTime = formatTime(_this3.videoElement.currentTime);
+				_this3.props.actions.currentTimeChanged(currentTime);
 			});
 
 			this.videoElement.addEventListener('ended', function () {
-				_this2.videoElement.pause();
-				_this2.props.actions.playbackStatusChanged(false);
+				_this3.videoElement.pause();
+				_this3.props.actions.playbackStatusChanged(false);
 			});
 		}
 	}, {
@@ -153,6 +164,8 @@ var HLSPlayer = function (_Component) {
 			    startBuffering = _props$state.startBuffering;
 
 			var classList = e.target.classList;
+
+			this.disableControlsOnTimeout();
 
 			if (!startBuffering) return;
 			if (!classList.contains('hlsPlayer-controls__btn-play') && !classList.contains('hlsPlayer-video')) return;
@@ -201,8 +214,6 @@ var HLSPlayer = function (_Component) {
 	}, {
 		key: 'handlePlayerMouseMove',
 		value: function handlePlayerMouseMove() {
-			var _this3 = this;
-
 			var _props$state3 = this.props.state,
 			    disableControls = _props$state3.disableControls,
 			    startBuffering = _props$state3.startBuffering;
@@ -211,11 +222,7 @@ var HLSPlayer = function (_Component) {
 			if (!disableControls || !startBuffering) return;
 
 			this.props.actions.disableControlsChanged(false);
-
-			clearTimeout(this.timeoutId);
-			this.timeoutId = setTimeout(function () {
-				_this3.props.actions.disableControlsChanged(true);
-			}, DISABLE_CONTROLS_TIMEOUT_MSEC);
+			this.disableControlsOnTimeout();
 		}
 	}, {
 		key: 'render',
