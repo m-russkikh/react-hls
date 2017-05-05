@@ -9,7 +9,6 @@ import classnames from 'classnames';
 import * as actions from '../actions/player';
 
 import 'rc-slider/assets/index.css';
-import '../../styles/react-hls-player.css';
 
 const DISABLE_CONTROLS_TIMEOUT_MSEC = 5000;
 

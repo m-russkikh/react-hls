@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --inline --host 0.0.0.0",
     "build": "webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "./node_modules/.bin/babel src/ -d dist/ --presets es2015,react,stage-0"
+    "compile": "./node_modules/.bin/babel src/ -d dist/ --presets es2015,react,stage-0 && sass --update styles/react-hls-player.scss:styles/react-hls-player.css"
   },
   "author": "Mikhail Russkikh",
   "license": "MIT",

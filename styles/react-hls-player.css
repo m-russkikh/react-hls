@@ -1,95 +1,82 @@
 .hlsPlayer {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	min-width: 300px;
-}
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 300px; }
 
 .hlsPlayer-video {
-	width: 100%;
-	height: 100%;
-	background: black;
-}
+  width: 100%;
+  height: 100%;
+  background: black; }
 
 .hlsPlayer-controls {
-	position: absolute;
-	bottom: 30px;
-	left: 0;
-	right: 0;
-	z-index: 100;
-	height: 20px;
-	line-height: 20px;
-	padding: 0 40px;
-}
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 40px; }
 
 .hlsPlayer-title {
-	position: absolute;
-	left: 0;
-	top: 30px;
-	color: white;
-	font-size: 22px;
-	padding: 0 40px;
-	width: 50%;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
-}
+  position: absolute;
+  left: 0;
+  top: 30px;
+  color: white;
+  font-size: 22px;
+  padding: 0 40px;
+  width: 50%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
 
 .hlsPlayer-controls__block {
-	display: inline-flex;
-	height: 100%;
-}
+  display: inline-flex;
+  height: 100%; }
 
 .hlsPlayer-controls__block_right {
-	float: right;
-}
+  float: right; }
 
 .hlsPlayer-controls__btn {
-	cursor: pointer;
-	display: inline-block;
-	width: 15px;
-	height: 100%;
-	background-repeat: no-repeat;
-	background-position: center;
-}
+  cursor: pointer;
+  display: inline-block;
+  width: 15px;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center; }
 
 .hlsPlayer-controls__btn-play {
-	background-image: url(icons/playicon.svg);
-}
+  background-image: url(icons/playicon.svg); }
 
 .hlsPlayer-controls__btn-play_pause {
-	background-image: url(icons/pauseicon.svg);
-}
+  background-image: url(icons/pauseicon.svg); }
 
 .hlsPlayer-controls__btn-volume {
-	background-image: url(icons/soundicon.svg);
-	margin: 0 5px 0 30px;
-}
+  background-image: url(icons/soundicon.svg);
+  margin: 0 5px 0 30px; }
 
 .hlsPlayer-controls__btn-volume_off {
-	background-image: url(icons/officon.svg);
-}
+  background-image: url(icons/officon.svg); }
 
 .hlsPlayer-controls__btn-fullscreen {
-	background-image: url(icons/fullicon.svg);
-	margin-left: 30px;
-}
+  background-image: url(icons/fullicon.svg);
+  margin-left: 30px; }
 
 .hlsPlayer-controls__btn-fullscreen_off {
-	background-image: url(icons/windowicon.svg);
-}
+  background-image: url(icons/windowicon.svg); }
 
 .hlsPlayer-controls__slider-volume {
-	display: inline-block;
-	width: 45px;
-	height: 4px;
-	padding: 0;
-	top: -50%;
-	transform: translateY(50%);
-}
+  display: inline-block;
+  width: 45px;
+  height: 4px;
+  padding: 0;
+  top: -50%;
+  transform: translateY(50%); }
 
 .hlsPlayer-controls__timer {
-	font-size: 16px;
-	white-space: nowrap;
-	color: white;
-}
+  font-size: 16px;
+  white-space: nowrap;
+  color: white; }
+
+/*# sourceMappingURL=react-hls-player.css.map */
