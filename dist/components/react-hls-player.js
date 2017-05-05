@@ -71,7 +71,7 @@ var HLSPlayer = function (_Component) {
 		_this.player = null;
 		_this.timeoutId = null;
 
-		_this.handlePlayBtn = _this.handlePlayBtn.bind(_this);
+		_this.handlePlayerClick = _this.handlePlayerClick.bind(_this);
 		_this.handleFullScreenBtn = _this.handleFullScreenBtn.bind(_this);
 		_this.handleVolumeBtn = _this.handleVolumeBtn.bind(_this);
 		_this.handleVolumeChange = _this.handleVolumeChange.bind(_this);
@@ -144,14 +144,18 @@ var HLSPlayer = function (_Component) {
 			console.log('error with HLS...', data.type);
 		}
 	}, {
-		key: 'handlePlayBtn',
-		value: function handlePlayBtn(e) {
+		key: 'handlePlayerClick',
+		value: function handlePlayerClick(e) {
 			e.stopPropagation();
 
-			if (e.target.classList.contains('rc-slider-step')) return;
+			var _props$state = this.props.state,
+			    isPlaying = _props$state.isPlaying,
+			    startBuffering = _props$state.startBuffering;
 
-			var isPlaying = this.props.state.isPlaying;
+			var classList = e.target.classList;
 
+			if (!startBuffering) return;
+			if (!classList.contains('hlsPlayer-controls__btn-play') && !classList.contains('hlsPlayer-video')) return;
 
 			if (isPlaying) this.videoElement.pause();else this.videoElement.play();
 
@@ -169,9 +173,9 @@ var HLSPlayer = function (_Component) {
 		value: function handleVolumeBtn(e) {
 			e.stopPropagation();
 
-			var _props$state = this.props.state,
-			    isMuted = _props$state.isMuted,
-			    volume = _props$state.volume;
+			var _props$state2 = this.props.state,
+			    isMuted = _props$state2.isMuted,
+			    volume = _props$state2.volume;
 
 
 			if (volume === 0 && isMuted) return;
@@ -199,9 +203,9 @@ var HLSPlayer = function (_Component) {
 		value: function handlePlayerMouseMove() {
 			var _this3 = this;
 
-			var _props$state2 = this.props.state,
-			    disableControls = _props$state2.disableControls,
-			    startBuffering = _props$state2.startBuffering;
+			var _props$state3 = this.props.state,
+			    disableControls = _props$state3.disableControls,
+			    startBuffering = _props$state3.startBuffering;
 
 
 			if (!disableControls || !startBuffering) return;
@@ -218,12 +222,12 @@ var HLSPlayer = function (_Component) {
 		value: function render() {
 			var _this4 = this;
 
-			var _props$state3 = this.props.state,
-			    isPlaying = _props$state3.isPlaying,
-			    isMuted = _props$state3.isMuted,
-			    currentTime = _props$state3.currentTime,
-			    isFullscreen = _props$state3.isFullscreen,
-			    disableControls = _props$state3.disableControls;
+			var _props$state4 = this.props.state,
+			    isPlaying = _props$state4.isPlaying,
+			    isMuted = _props$state4.isMuted,
+			    currentTime = _props$state4.currentTime,
+			    isFullscreen = _props$state4.isFullscreen,
+			    disableControls = _props$state4.disableControls;
 
 
 			var btnPlayClass = (0, _classnames2.default)('hlsPlayer-controls__btn', 'hlsPlayer-controls__btn-play', isPlaying && 'hlsPlayer-controls__btn-play_pause');
@@ -232,7 +236,7 @@ var HLSPlayer = function (_Component) {
 
 			return _react2.default.createElement(
 				'div',
-				{ className: 'hlsPlayer', onClick: this.handlePlayBtn, onMouseMove: this.handlePlayerMouseMove,
+				{ className: 'hlsPlayer', onClick: this.handlePlayerClick, onMouseMove: this.handlePlayerMouseMove,
 					ref: function ref(container) {
 						_this4.videoContainer = container;
 					}

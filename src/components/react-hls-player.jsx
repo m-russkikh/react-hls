@@ -46,7 +46,7 @@ class HLSPlayer extends Component {
 		this.player = null;
 		this.timeoutId = null;
 
-		this.handlePlayBtn = this.handlePlayBtn.bind(this);
+		this.handlePlayerClick = this.handlePlayerClick.bind(this);
 		this.handleFullScreenBtn = this.handleFullScreenBtn.bind(this);
 		this.handleVolumeBtn = this.handleVolumeBtn.bind(this);
 		this.handleVolumeChange = this.handleVolumeChange.bind(this);
@@ -108,13 +108,15 @@ class HLSPlayer extends Component {
 		console.log('error with HLS...', data.type);
 	}
 
-	handlePlayBtn(e) {
+	handlePlayerClick(e) {
 		e.stopPropagation();
 
-		if (e.target.classList.contains('rc-slider-step'))
-			return;
+		const { isPlaying, startBuffering } = this.props.state;
+		let classList = e.target.classList;
 
-		const { isPlaying } = this.props.state;
+		if (!startBuffering) return;
+		if (!classList.contains('hlsPlayer-controls__btn-play') && !classList.contains('hlsPlayer-video'))
+			return;
 
 		if (isPlaying)
 			this.videoElement.pause();
@@ -180,7 +182,7 @@ class HLSPlayer extends Component {
 			isFullscreen && 'hlsPlayer-controls__btn-fullscreen_off');
 
 		return (
-			<div className="hlsPlayer" onClick={this.handlePlayBtn} onMouseMove={this.handlePlayerMouseMove}
+			<div className="hlsPlayer" onClick={this.handlePlayerClick} onMouseMove={this.handlePlayerMouseMove}
 				 ref={ (container) => { this.videoContainer = container; } }
 			>
 				<video className='hlsPlayer-video'
