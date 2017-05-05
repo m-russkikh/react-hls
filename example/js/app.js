@@ -5,6 +5,8 @@ import axios from 'axios';
 import store from './store';
 import HLSPlayer from '../../dist/components/react-hls-player';
 
+import '../styles/style.css';
+
 axios.get('../webcast.json').then(response => {
 		return response.data;
 	})
