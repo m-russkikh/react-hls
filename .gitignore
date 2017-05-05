@@ -1,3 +1,7 @@
 .idea
 .sass-cache
 node_modules
+dist
+example/build
+styles/react-hls-player.css
+styles/react-hls-player.css.map
