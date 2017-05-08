@@ -6,7 +6,7 @@ const initialState = {
 	isFullscreen: false,
 	currentTime: '00:00',
 	volume: 70,
-	disableControls: false,
+	disableControls: true,
 	startBuffering: false
 };
 
@@ -25,7 +25,7 @@ export default function playerReducer(state = initialState, action) {
 		case types.DISABLE_CONTROLS_CHANGED:
 			return {...state, disableControls: action.disableControls};
 		case types.START_BUFFERING:
-			return {...state, startBuffering: action.startBuffering};
+			return {...state, startBuffering: action.startBuffering, disableControls: false};
 	}
 	return state;
 }
