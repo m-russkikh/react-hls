@@ -27,8 +27,7 @@ module.exports = {
 				test: /\.js?/,
 				loaders: ['react-hot-loader','babel-loader'],
 				include: [
-					path.join(__dirname, 'example'),
-					/node_modules\/hls\.js/
+					path.join(__dirname, 'example')
 				]
 			}, {
 				test: /\.svg$/,

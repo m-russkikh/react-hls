@@ -1,4 +1,4 @@
-import '!script-loader!hls.js';
+import Hls from 'hls.js';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
@@ -26,7 +26,7 @@ function formatTime(time) {
 	return (hours !== '00' ? hours + ':' : '') + minutes+ ':' + seconds;
 }
 
-class HLSPlayer extends Component {
+export class HLSPlayer extends Component {
 
 	static defaultProps = {
 		source: '',
