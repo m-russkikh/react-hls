@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 import store from './store';
-import HLSPlayer from '../../dist/components/react-hls-player';
+import HLSPlayer from '../../src/components/react-hls-player';
 
 import '../../styles/react-hls-player.css';
 import '../styles/style.css';

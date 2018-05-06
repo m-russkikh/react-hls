@@ -3,20 +3,20 @@ var webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-	devtool: 'source-map',
 	devServer: {
-		historyApiFallback: {
-			index: 'example/index.html'
-		},
-		contentBase: path.join(__dirname, "example")
+		publicPath: '/dist/',
+		contentBase: path.join(__dirname, "example"),
+		hot: true
 	},
-	entry: [
-		'./example/js/app.js'
-	],
+	entry: {
+		'react-hls': './example/js/app.js'
+	},
 	output: {
-		path: path.join(__dirname, 'example/build'),
-		filename: 'bundle.js',
-		publicPath: '/build/'
+		path: path.join(__dirname, 'dist'),
+		filename: '[name].bundle.js',
+	},
+	resolve: {
+		extensions: ['.js', '.jsx', '.css', '.scss']
 	},
 	module: {
 		rules: [
@@ -24,11 +24,9 @@ module.exports = {
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
 			}, {
-				test: /\.js?/,
-				loaders: ['react-hot-loader','babel-loader'],
-				include: [
-					path.join(__dirname, 'example')
-				]
+				test: /\.js|jsx$/,
+				loaders: ['babel-loader'],
+				exclude: /node_modules/
 			}, {
 				test: /\.svg$/,
 				loaders: [
@@ -37,8 +35,11 @@ module.exports = {
 			}
 		]
 	},
+	performance: {
+		hints: false
+	},
 	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
-		new ExtractTextPlugin('bundle.min.css')
+		new ExtractTextPlugin('[name].bundle.css'),
+		new webpack.HotModuleReplacementPlugin()
 	]
 };

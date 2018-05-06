@@ -27,19 +27,6 @@ function formatTime(time) {
 }
 
 export class HLSPlayer extends Component {
-
-	static defaultProps = {
-		source: '',
-		title: '',
-		hlsParams: {}
-	};
-
-	static propTypes = {
-		source: PropTypes.string.isRequired,
-		title: PropTypes.string,
-		hlsParams: PropTypes.object
-	};
-
 	constructor(props, context) {
 		super(props, context);
 
@@ -206,8 +193,8 @@ export class HLSPlayer extends Component {
 						<Slider
 							className="hlsPlayer-controls__slider-volume"
 							defaultValue={volume}
-							maximumTrackStyle={{ opacity: 0.4 }}
-							minimumTrackStyle={{ backgroundColor: 'white'}}
+							railStyle={{ opacity: 0.4 }}
+							trackStyle={{ backgroundColor: 'white'}}
 							handleStyle={{
 								display: 'none'
 							}}
@@ -224,6 +211,18 @@ export class HLSPlayer extends Component {
 		);
 	}
 }
+
+HLSPlayer.defaultProps = {
+	source: '',
+	title: '',
+	hlsParams: {}
+};
+
+HLSPlayer.propTypes = {
+	source: PropTypes.string.isRequired,
+	title: PropTypes.string,
+	hlsParams: PropTypes.object
+};
 
 const mapStateToProps = function(state) {
 	return {state: state.player};

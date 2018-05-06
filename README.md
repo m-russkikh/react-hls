@@ -6,7 +6,6 @@ React компонент с использованием Redux для состо
 
 ```sh
 $ npm install
-$ npm run compile
 $ node start
 ```
 
