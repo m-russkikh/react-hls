@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import playerReducer from '../../src/reducers/player';
+import playerReducer from './reducers/player';
 
 export default combineReducers({
 	player: playerReducer

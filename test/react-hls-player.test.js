@@ -4,7 +4,7 @@ import { shallow, mount } from 'enzyme'
 import ConnectedHLSPlayer, {HLSPlayer} from '../src/components/react-hls-player';
 import * as actions from '../src/actions/player';
 import { createStore } from 'redux';
-import reducer from '../example/js/reducer'
+import reducer from '../src/reducers'
 
 describe('<HLSPlayer />', () => {
 	const webcast = {

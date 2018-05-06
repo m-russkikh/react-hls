@@ -5,11 +5,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
 	devServer: {
 		publicPath: '/dist/',
-		contentBase: path.join(__dirname, "example"),
 		hot: true
 	},
 	entry: {
-		'react-hls': './example/js/app.js'
+		'react-hls': './src/index.js'
 	},
 	output: {
 		path: path.join(__dirname, 'dist'),
@@ -23,6 +22,15 @@ module.exports = {
 			{
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
+			}, {
+				test: /\.scss$/,
+				use: [{
+					loader: "style-loader"
+				}, {
+					loader: "css-loader"
+				}, {
+					loader: "sass-loader"
+				}]
 			}, {
 				test: /\.js|jsx$/,
 				loaders: ['babel-loader'],

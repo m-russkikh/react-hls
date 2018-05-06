@@ -1,6 +1,3 @@
 .idea
-.sass-cache
 node_modules
 dist
-styles/react-hls-player.css
-styles/react-hls-player.css.map
