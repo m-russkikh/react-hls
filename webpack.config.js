@@ -32,6 +32,11 @@ module.exports = {
 					loader: "sass-loader"
 				}]
 			}, {
+				enforce: 'pre',
+				test: /\.js|jsx$/,
+				exclude: /node_modules/,
+				use: ['eslint-loader'],
+			}, {
 				test: /\.js|jsx$/,
 				loaders: ['babel-loader'],
 				exclude: /node_modules/
