@@ -1,0 +1,64 @@
+.controls-panel {
+  position: absolute;
+  bottom: 30px;
+  padding: 0 40px;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+
+  & > * {
+    display: inherit;
+  }
+
+  .left {
+    flex: 1;
+  }
+
+  .button {
+    cursor: pointer;
+    display: inline-block;
+    width: 15px;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .play {
+    background-image: url(../../../icons/playicon.svg);
+  }
+
+  .pause {
+    background-image: url(../../../icons/pauseicon.svg);
+  }
+
+  .fullscreen {
+    background-image: url(../../../icons/fullicon.svg);
+    margin-left: 30px;
+
+    &.off {
+      background-image: url(../../../icons/windowicon.svg);
+    }
+  }
+
+  .volume {
+    background-image: url(../../../icons/soundicon.svg);
+    margin: 0 5px 0 30px;
+
+    &.off {
+      background-image: url(../../../icons/officon.svg);
+    }
+  }
+
+  .slider-volume {
+    display: inline-block;
+    width: 45px;
+    height: 4px;
+    padding: 0;
+    top: -50%;
+    transform: translateY(50%);
+  }
+
+  .timer {
+    color: #fff;
+  }
+}

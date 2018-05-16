@@ -1,0 +1,1 @@
+export const DISABLE_CONTROLS_TIMEOUT_MSEC = 5000;

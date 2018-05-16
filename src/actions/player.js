@@ -1,51 +1,50 @@
-import * as types from './types';
+import {
+  CHANGE_PLAYBACK_STATUS,
+  CHANGE_MUTE_STATUS,
+  CHANGE_FULLSCREEN_STATUS,
+  CHANGE_CURRENT_TIME,
+  CHANGE_VOLUME,
+  CAN_PLAY,
+} from '../actionTypes/player';
 
-export function playbackStatusChanged(isPlaying) {
+export function changePlaybackStatus(isPlaying) {
   return {
-    type: types.PLAYBACK_STATUS_CHANGED,
-    isPlaying,
+    type: CHANGE_PLAYBACK_STATUS,
+    payload: { isPlaying },
   };
 }
 
-export function muteStatusChanged(isMuted) {
+export function changeMuteStatus(isMuted) {
   return {
-    type: types.MUTE_STATUS_CHANGED,
-    isMuted,
+    type: CHANGE_MUTE_STATUS,
+    payload: { isMuted },
   };
 }
 
-export function fullscreenChanged(isFullscreen) {
+export function changeFullscreenStatus(isFullscreen) {
   return {
-    type: types.FULLSCREEN_CHANGED,
-    isFullscreen,
+    type: CHANGE_FULLSCREEN_STATUS,
+    payload: { isFullscreen },
   };
 }
 
-export function currentTimeChanged(currentTime) {
+export function changeCurrentTime(currentTime) {
   return {
-    type: types.CURRENT_TIME_CHANGED,
-    currentTime,
+    type: CHANGE_CURRENT_TIME,
+    payload: { currentTime },
   };
 }
 
-export function volumeChanged(volume, isMuted) {
+export function changeVolume(volume) {
   return {
-    type: types.VOLUME_CHANGED,
-    volume,
-    isMuted,
+    type: CHANGE_VOLUME,
+    payload: { volume },
   };
 }
 
-export function disableControlsChanged(disableControls) {
+export function canPlay(canPlayed) {
   return {
-    type: types.DISABLE_CONTROLS_CHANGED,
-    disableControls,
-  };
-}
-
-export function startBufferingChanged(startBuffering) {
-  return {
-    type: types.START_BUFFERING,
-    startBuffering,
+    type: CAN_PLAY,
+    payload: { canPlayed },
   };
 }
