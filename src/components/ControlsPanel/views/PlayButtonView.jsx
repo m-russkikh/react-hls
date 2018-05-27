@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AbstractButtonView } from '../views';
+import AbstractButtonView from './AbstractButtonView';
 import { PlayButtonViewPropType } from '../propTypes';
 import '../styles/controls-panel.scss';
 

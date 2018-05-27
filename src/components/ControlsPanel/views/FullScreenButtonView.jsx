@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import { AbstractButtonView } from '../views';
+import AbstractButtonView from './AbstractButtonView';
 import { FullScreenButtonViewPropType } from '../propTypes';
 import '../styles/controls-panel.scss';
 

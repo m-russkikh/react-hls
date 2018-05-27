@@ -13,13 +13,10 @@ class AppContainer extends PureComponent {
   componentDidMount() {
     axios.get('../webcast.json')
       .then(response => response.data)
-      .catch((error) => {
-        console.warn('Error when load webcast.json', error);
-        return {
-          source: '',
-          title: 'Ошибка при загрузке плейлиста',
-        };
-      })
+      .catch(() => ({
+        source: '',
+        title: 'Ошибка при загрузке плейлиста',
+      }))
       .then(({ source, title }) => {
         this.setState({
           source,

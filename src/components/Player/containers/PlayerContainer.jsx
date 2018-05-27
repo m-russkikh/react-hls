@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import screenfull from 'screenfull';
 
-import ControlsPanel from '../..//ControlsPanel';
-import PlainText from '../..//PlainText';
+import ControlsPanel from '../../ControlsPanel';
+import PlainText from '../../PlainText';
 import HlsVideo from '../../HlsVideo';
 import { PlayerContainerPropType } from '../propTypes';
 import { DISABLE_CONTROLS_TIMEOUT_MSEC } from '../../../constants/player';

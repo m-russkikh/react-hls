@@ -7,6 +7,14 @@ import '../styles/hls-video.scss';
 
 
 class HlsVideoContainer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleCanPlay = this.handleCanPlay.bind(this);
+    this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
+    this.handleEnded = this.handleEnded.bind(this);
+  }
+
   componentDidMount() {
     if (!Hls.isSupported()) {
       console.error('Hls is not supported!');
@@ -20,22 +28,25 @@ class HlsVideoContainer extends Component {
     this.hls.on(Hls.Events.ERROR, this.onHlsError);
 
     this.handleVideoListeners();
+
+    this.setVolume();
+    this.setMuteStatus();
   }
 
   componentDidUpdate(prevProps) {
     const { isPlaying, volume, isMuted } = this.props;
-    const { isPlayingPrev, volumePrev, isMutedPrev } = prevProps;
+    const { isPlaying: isPlayingPrev, volume: volumePrev, isMuted: isMutedPrev } = prevProps;
 
     if (isPlaying !== isPlayingPrev) {
       this.videoElement[isPlaying ? 'play' : 'pause']();
     }
 
     if (volume !== volumePrev) {
-      this.videoElement.volume = volume / 100;
+      this.setVolume();
     }
 
     if (isMuted !== isMutedPrev) {
-      this.videoElement.muted = isMuted;
+      this.setMuteStatus();
     }
   }
 
@@ -61,8 +72,12 @@ class HlsVideoContainer extends Component {
     console.log('error with HLS...', data.type);
   }
 
-  handleCanPlay = () => {
-    this.props.canPlay(true);
+  setVolume = () => {
+    this.videoElement.volume = this.props.volume / 100;
+  };
+
+  setMuteStatus = () => {
+    this.videoElement.muted = this.props.isMuted;
   };
 
   handleClick = () => {
@@ -71,15 +86,19 @@ class HlsVideoContainer extends Component {
     changePlaybackStatus(!isPlaying);
   };
 
-  handleEnded = () => {
-    this.props.changePlaybackStatus(false);
-  };
+  handleCanPlay() {
+    this.props.canPlay(true);
+  }
 
-  handleTimeUpdate = (e) => {
+  handleEnded() {
+    this.props.changePlaybackStatus(false);
+  }
+
+  handleTimeUpdate(e) {
     const currentTime = formatTime(e.currentTarget.currentTime);
 
     this.props.changeCurrentTime(currentTime);
-  };
+  }
 
   handleVideoListeners = () => {
     this.videoElement.addEventListener('canplay', this.handleCanPlay);
